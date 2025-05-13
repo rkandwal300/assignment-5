@@ -45,19 +45,7 @@ export default function RecommendationCard(props) {
           <strong>Annual Cost </strong>
           <strong>${selected.annualCost} </strong>
         </DialogHeader>
-        {/* <DialogDescription className="p-6">
-          <h2 className="text-xl text-primary font-bold mb-2">
-            {selected.instanceType}{" "}
-          </h2>
-          <ul className="space-y-1">
-            {Object.keys(temp).map((key) => (
-              <li key={key} className="grid grid-cols-2">
-                <strong>{temp[key]}</strong> {selected[key]}
-              </li>
-            ))}
-          </ul>
-        </DialogDescription> */}
-
+     
         <DialogDescription className="flex border-t flex-wrap overflow-auto h-[390px] lg:flex-nowrap">
          
             {recommendations.map((rec, idx) => (

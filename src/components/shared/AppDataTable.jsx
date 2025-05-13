@@ -16,8 +16,7 @@ function AppDataTable() {
       setData(res);
       setLoading(false);
     })();
-  }, [limit,skip]);
-console.log({skip})
+  }, [limit, skip]);
   if (loading)
     return (
       <div className="h-screen w-full flex justify-center items-center">
@@ -31,7 +30,7 @@ console.log({skip})
       limit={limit}
       setLimit={setLimit}
       prev={() => setSkip((prev) => (prev == 0 ? 0 : prev - 10))}
-      next={() => setSkip((prev) => ( prev + 10))}
+      next={() => setSkip((prev) => prev + 10)}
     />
   );
 }

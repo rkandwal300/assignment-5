@@ -22,14 +22,17 @@ import { Button } from "@/components/ui/button";
 import React, { useRef, useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"; 
+} from "@/components/ui/dialog";
 import FigmaRecCard from "../FigmaRecCard";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
+import CardTableRow from "./CardTableRow";
+import { X } from "lucide-react";
 
 const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
   const dialogRef = useRef();
@@ -47,15 +50,20 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
   };
 
   return (
-    <div className="rounded-md border flex flex-col flex-1 justify-between overflow-hidden bg-muted/60">
-      <Table className={"border-b pt-20"}>
-        <TableHeader className={' '}>
+    <div className="rounded-md border flex flex-col flex-1 justify-between  bg-muted/60 ">
+      <Table
+        className={
+          "border-b table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
+        }
+      >
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className={"bg-muted"}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
                     key={header.id}
+                    className={"font-bold"}
                     style={{
                       ...getCommonPinningStyles(header.column),
                     }}
@@ -76,20 +84,23 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
-                <TableRow
+                <CardTableRow
                   onClick={() => handleDialogContent(row.original)}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={"font-medium text-muted-foreground"}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
+                </CardTableRow>
               </React.Fragment>
             ))
           ) : (
@@ -108,38 +119,81 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
           </Button>
         </DialogTrigger>
         <DialogContent
-          className={"h-fit md:max-w-[900px] lg:max-w-[950px]  p-0"}
+          className={"h-fit md:max-w-[900px] lg:max-w-[950px] p-0"}
         >
           {selected && (
             <>
               <DialogHeader
-                className={"p-4 w-96 grid grid-cols-2  font-semibold text-sm"}
+                className={
+                  "p-4 py-2 w-full z-50 bg-background flex flex-row justify-between items-center border-b"
+                }
               >
-                <DialogTitle className={"col-span-2"}>
-                  Current Platform{" "}
+                <DialogTitle className={"text-3xl font-semibold"}>
+                  {selected.currentPlatform.instanceType}
                 </DialogTitle>
-                <strong>Instance Type </strong>
-                <strong>{selected.currentPlatform.instanceType} </strong>
-                <strong>vCPU </strong>
-                <strong>{selected.currentPlatform.vCPU} </strong>
-                <strong>Monthly Cost </strong>
-                <strong>${selected.currentPlatform.monthlyCost} </strong>
-                <strong>Annual Cost </strong>
-                <strong>${selected.currentPlatform.annualCost} </strong>
+                <DialogClose>
+                  <X size={18} />
+                </DialogClose>
+                {/* <strong>Instance Type </strong>
+                <strong></strong>
+                <strong> </strong>
+                <strong>{selected.currentPlatform.} </strong>
+                <strong> </strong>
+                <strong>${selected.currentPlatform.} </strong>
+                <strong> </strong>
+                <strong>${selected.currentPlatform.} </strong> */}
               </DialogHeader>
 
-              <DialogDescription className="flex border-t flex-wrap overflow-auto h-[390px] lg:flex-nowrap">
-                {selected?.recommendations?.map((rec, idx) => (
-                  <Button
-                    key={`${rec.instanceType}-${idx}`}
-                    variant={"ghost"}
-                    className={"h-fit"}
-                    // onClick={() => setSelected(rec)}
-                  >
-                    <FigmaRecCard {...{ ...rec, index: idx + 1 }} />
-                    {/* <DataCard {...{currentPlatform:rec}} /> */}
-                  </Button>
-                ))}
+              <DialogDescription className="grid grid-cols-2 gap-4 p-4 text-lg font-semibold">
+                <p className="col-span-2">Current Platform</p>
+                <Button
+                  variant={"secondary"}
+                  size="lg"
+                  className={"font-semibold text-lg flex justify-between"}
+                >
+                  <span className="text-muted-foreground">Instance Type: </span>
+                  <span> {selected.currentPlatform.instanceType}</span>
+                </Button>
+                <Button
+                  variant={"secondary"}
+                  size="lg"
+                  className={"font-semibold text-lg flex justify-between"}
+                >
+                  <span className="text-muted-foreground">vCPU: </span>
+                  <span> {selected.currentPlatform.vCPU}</span>
+                </Button>
+                <Button
+                  variant={"secondary"}
+                  size="lg"
+                  className={"font-semibold text-lg flex justify-between"}
+                >
+                  <span className="text-muted-foreground">Monthly Cost: </span>
+                  <span> $ {selected.currentPlatform.monthlyCost}</span>
+                </Button>
+                <Button
+                  variant={"secondary"}
+                  size="lg"
+                  className={"font-semibold text-lg flex justify-between"}
+                >
+                  <span className="text-muted-foreground">Annual Cost: </span>
+                  <span> $ {selected.currentPlatform.annualCost}</span>
+                </Button>
+                <p className="col-span-2 mt-6 text-xl font-bold text-primary/90">
+                  Recommendation({selected?.recommendations.length})
+                </p>
+                <div className="col-span-2 w-full flex flex-wrap ">
+                  {selected?.recommendations?.map((rec, idx) => (
+                    <Button
+                      key={`${rec.instanceType}-${idx}`}
+                      variant={"ghost"}
+                      className={"h-fit"}
+                      // onClick={() => setSelected(rec)}
+                    >
+                      <FigmaRecCard {...{ ...rec, index: idx + 1 }} />
+                      {/* <DataCard {...{currentPlatform:rec}} /> */}
+                    </Button>
+                  ))}
+                </div>
               </DialogDescription>
             </>
           )}

@@ -4,11 +4,11 @@ export const getCommonPinningStyles = (column) => {
     isPinned === "left" && column.getIsLastColumn("left");
   const isFirstRightPinnedColumn =
     isPinned === "right" && column.getIsFirstColumn("right");
-
+  console.log({ maxWidth: column.columnDef?.maxSize });
   return {
     left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
     right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
-    opacity: isPinned ? 1 : 1,
+    opacity: 1,
     position: isPinned ? "sticky" : "relative",
     zIndex: isPinned ? 1 : 0,
     // width: column.getSize(),

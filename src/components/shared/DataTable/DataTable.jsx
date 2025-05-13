@@ -50,7 +50,7 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
   };
 
   return (
-    <div className="rounded-md border flex flex-col flex-1 justify-between  bg-muted/60 ">
+    <div className="rounded-md border flex flex-col flex-1 justify-between bg-muted/60 ">
       <Table
         className={
           "border-b table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
@@ -92,6 +92,13 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
+                      style={{
+                        ...getCommonPinningStyles(cell.column),
+                        width:
+                          cell.column.getSize() === Number.MAX_SAFE_INTEGER
+                            ? "auto"
+                            : cell.column.getSize(),
+                      }}
                       className={"font-medium text-muted-foreground"}
                     >
                       {flexRender(

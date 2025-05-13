@@ -1,5 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Copy, EllipsisVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  CalendarDays,
+  Copy,
+  EllipsisVertical,
+  MoreHorizontal,
+} from "lucide-react";
 
 export const Column = [
   {
@@ -40,19 +59,59 @@ export const Column = [
     accessorKey: "actions",
     header: "Actions",
     cell: () => (
-      <div className="flex gap-2 items-center bg-red-300">
-        <Button className={"rounded-full  w-9 aspect-square"}>
-          <CalendarDays size={18} />
-        </Button>
-        <Button className={"rounded-full  w-9 aspect-square"}>
-          <Copy size={18} />
-        </Button>
-        <Button className={"rounded-full  w-9 aspect-square"}>
-          <EllipsisVertical size={18} />
-        </Button>
-      </div>
+      <>
+        <div
+          className="hidden lg:flex gap-2 items-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <Button className={"rounded-full  w-9 aspect-square"}>
+            <CalendarDays size={18} />
+          </Button>
+          <Button className={"rounded-full  w-9 aspect-square"}>
+            <Copy size={18} />
+          </Button>
+          <Button className={"rounded-full  w-9 aspect-square"}>
+            <EllipsisVertical size={18} />
+          </Button>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="lg:hidden h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="w-56"
+          >
+            <DropdownMenuLabel className={"font-semibold"}>
+              Actions
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                Copy
+                <DropdownMenuShortcut>
+                  <Copy size={18} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Calender
+                <DropdownMenuShortcut>
+                  <CalendarDays size={18} />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </>
     ),
-    maxSize:50,
-    size:50
+    maxSize: 65,
+    size: 50,
   },
 ];

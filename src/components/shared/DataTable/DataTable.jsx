@@ -20,15 +20,20 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import React, { useRef, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@radix-ui/react-select";
-import FigmaCard from "../FigmaCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"; 
 import FigmaRecCard from "../FigmaRecCard";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
 
 const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
   const dialogRef = useRef();
-  const [hoveredRowId, setHoveredRowId] = useState(null);
+
   const [selected, setSelected] = useState(null);
 
   const table = useReactTable({
@@ -36,22 +41,25 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  const handleDialogContent = (data) => {
+  const handleDialogContent = ({ data }) => {
     setSelected(data);
     dialogRef.current.click();
   };
 
   return (
-    <div className="rounded-md border flex flex-col flex-1 justify-between overflow-hidden">
-      <Table className={"overflow-auto border-b"}>
-        <TableHeader className={"bg-muted"}>
+    <div className="rounded-md border flex flex-col flex-1 justify-between overflow-hidden bg-muted/60">
+      <Table className={"border-b pt-20"}>
+        <TableHeader className={' '}>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className={"bg-muted"}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} style={{
-                    ...getCommonPinningStyles(header.column),
-                  }}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      ...getCommonPinningStyles(header.column),
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -69,9 +77,7 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
             table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
                 <TableRow
-                  onMouseEnter={() => setHoveredRowId(row.id)}
-                  onMouseLeave={() => setHoveredRowId(null)}
-                  onClick={() => handleDialogContent(row.original.data)}
+                  onClick={() => handleDialogContent(row.original)}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -84,18 +90,6 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
                     </TableCell>
                   ))}
                 </TableRow>
-                {hoveredRowId === row.id && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={table.getAllColumns().length}
-                      className=""
-                    >
-                      <FigmaCard
-                        {...{ ...row.original.data, className: "w-full" }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                )}
               </React.Fragment>
             ))
           ) : (
@@ -113,39 +107,45 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
             Edit Profile
           </Button>
         </DialogTrigger>
-          <DialogContent className={"h-fit md:max-w-[900px] lg:max-w-[950px]  p-0"}>
-        {selected &&( <>
-        <DialogHeader className={"p-4 w-96 grid grid-cols-2  font-semibold text-sm"}>
-          <DialogTitle className={"col-span-2"}>Current Platform </DialogTitle>
-          <strong>Instance Type </strong>
-          <strong>{selected.instanceType} </strong>
-          <strong>vCPU </strong>
-          <strong>{selected.vCPU} </strong> 
-          <strong>Monthly Cost </strong>
-          <strong>${selected.monthlyCost} </strong>
-          <strong>Annual Cost </strong>
-          <strong>${selected.annualCost} </strong>
-        </DialogHeader>
-     
-        <DialogDescription className="flex border-t flex-wrap overflow-auto h-[390px] lg:flex-nowrap">
-         
-            {selected?.recommendations?.map((rec, idx) => (
-              <Button
-                key={`${rec.instanceType}-${idx}`}
-                variant={"ghost"}
-                className={"h-fit"}
-                onClick={() => setSelected(rec)}
+        <DialogContent
+          className={"h-fit md:max-w-[900px] lg:max-w-[950px]  p-0"}
+        >
+          {selected && (
+            <>
+              <DialogHeader
+                className={"p-4 w-96 grid grid-cols-2  font-semibold text-sm"}
               >
-                <FigmaRecCard {...{...rec, index: idx+1}} />
-                {/* <DataCard {...{currentPlatform:rec}} /> */}
-              </Button>
-            ))} 
-        </DialogDescription>
-        </>
-    )}
-      </DialogContent>
+                <DialogTitle className={"col-span-2"}>
+                  Current Platform{" "}
+                </DialogTitle>
+                <strong>Instance Type </strong>
+                <strong>{selected.currentPlatform.instanceType} </strong>
+                <strong>vCPU </strong>
+                <strong>{selected.currentPlatform.vCPU} </strong>
+                <strong>Monthly Cost </strong>
+                <strong>${selected.currentPlatform.monthlyCost} </strong>
+                <strong>Annual Cost </strong>
+                <strong>${selected.currentPlatform.annualCost} </strong>
+              </DialogHeader>
+
+              <DialogDescription className="flex border-t flex-wrap overflow-auto h-[390px] lg:flex-nowrap">
+                {selected?.recommendations?.map((rec, idx) => (
+                  <Button
+                    key={`${rec.instanceType}-${idx}`}
+                    variant={"ghost"}
+                    className={"h-fit"}
+                    // onClick={() => setSelected(rec)}
+                  >
+                    <FigmaRecCard {...{ ...rec, index: idx + 1 }} />
+                    {/* <DataCard {...{currentPlatform:rec}} /> */}
+                  </Button>
+                ))}
+              </DialogDescription>
+            </>
+          )}
+        </DialogContent>
       </Dialog>
-      <div className="w-full #bg-background flex items-center justify-end space-x-2 py-4 border-t px-4">
+      <div className="w-full bg-background flex items-center justify-end space-x-2 py-4 border-t px-4">
         <Select value={String(limit)} onValueChange={setLimit}>
           <SelectTrigger className="w-16">
             <SelectValue placeholder="0" />

@@ -3,7 +3,8 @@ export const Column = [
     accessorKey: "SR",
     header: "#",
     cell: ({row}) => `${row.index + 1}.`,
-    size:30
+    size:30,
+    maxSize:30
   },
   {
     accessorKey: "instanceType",

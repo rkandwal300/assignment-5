@@ -6,8 +6,8 @@ function App() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <section className="h-screen  flex flex-col pt-16 w-full overflow-visible">
-      <header className="py-4 z-50 bg-background w-full fixed top-0 flex justify-between items-center px-4 md:px-6 border-b">
+    <section className="h-screen  flex flex-col w-full overflow-hidden">
+      <header className="py-4 z-50 bg-background w-full flex justify-between items-center px-4 md:px-6 border-b">
         <h3 className="text-xl font-semibold">Assignment-5</h3>
         <Button
           onClick={toggleTheme}

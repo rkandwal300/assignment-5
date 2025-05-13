@@ -32,9 +32,18 @@ import {
 import FigmaRecCard from "../FigmaRecCard";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
 import CardTableRow from "./CardTableRow";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
-const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
+const DataTable = ({
+  columns,
+  data,
+  prev,
+  next,
+  limit,
+  setLimit,
+  ref,
+  total,
+}) => {
   const dialogRef = useRef();
 
   const [selected, setSelected] = useState(null);
@@ -50,10 +59,10 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
   };
 
   return (
-    <div className="rounded-md border flex flex-col flex-1 justify-between bg-muted/60 ">
+    <div className="rounded-md border flex flex-col flex-1 bg-muted/60 overflow-auto">
       <Table
         className={
-          "border-b table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
+          "table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
         }
       >
         <TableHeader>
@@ -112,13 +121,17 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
+              <TableCell className="h-24 text-center">No results.</TableCell>
             </TableRow>
           )}
+          <TableRow ref={ref}>
+            <TableCell colSpan={table.getAllColumns().length}>
+              <Loader2 size={30} className="mx-auto animate-spin" />
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
+
       <Dialog>
         <DialogTrigger asChild>
           <Button ref={dialogRef} variant="outline" className={"hidden"}>
@@ -141,14 +154,7 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
                 <DialogClose>
                   <X size={18} />
                 </DialogClose>
-                {/* <strong>Instance Type </strong>
-                <strong></strong>
-                <strong> </strong>
-                <strong>{selected.currentPlatform.} </strong>
-                <strong> </strong>
-                <strong>${selected.currentPlatform.} </strong>
-                <strong> </strong>
-                <strong>${selected.currentPlatform.} </strong> */}
+              
               </DialogHeader>
 
               <DialogDescription className="grid grid-cols-2 gap-4 p-4 text-lg font-semibold">
@@ -206,7 +212,8 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
           )}
         </DialogContent>
       </Dialog>
-      <div className="w-full bg-background flex items-center justify-end space-x-2 py-4 border-t px-4">
+      <div className="w-full mt-auto bg-background flex items-center justify-end space-x-2 py-4 border-t px-4">
+        <p className="mr-auto text-sm font-semibold ">{`${data.length} of ${total} row(s).`}</p>
         <Select value={String(limit)} onValueChange={setLimit}>
           <SelectTrigger className="w-16">
             <SelectValue placeholder="0" />
@@ -218,20 +225,10 @@ const DataTable = ({ columns, data, prev, next, limit, setLimit }) => {
           </SelectContent>
         </Select>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={prev}
-          //   disabled={!table.getCanPreviousPage()}
-        >
+        <Button variant="outline" size="sm" onClick={prev} disabled={!prev}>
           Previous
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={next}
-          //   disabled={!table.getCanNextPage()}
-        >
+        <Button variant="outline" size="sm" onClick={next} disabled={!next}>
           Next
         </Button>
       </div>

@@ -3,8 +3,7 @@ export const getCommonPinningStyles = (column) => {
   const isLastLeftPinnedColumn =
     isPinned === "left" && column.getIsLastColumn("left");
   const isFirstRightPinnedColumn =
-    isPinned === "right" && column.getIsFirstColumn("right");
-  console.log({ maxWidth: column.columnDef?.maxSize });
+    isPinned === "right" && column.getIsFirstColumn("right"); 
   return {
     left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
     right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,

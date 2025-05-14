@@ -22,9 +22,11 @@ function AppDataTable() {
       setLoading(false);
     })();
   }, [limit, skip]);
+
   console.log({
     skip,
   });
+  
   if (loading)
     return (
       <div className="h-screen w-full flex justify-center items-center ">

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
-import FigmaRecCard from "../FigmaRecCard";
+import React from "react"; 
+import FigmaRecCard from "../Card/FigmaRecCard";
 
 const RecommendationList = ({ recommendations = [] }) => (
   <div className="col-span-2 w-full flex flex-wrap gap-2">

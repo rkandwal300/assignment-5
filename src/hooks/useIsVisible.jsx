@@ -24,7 +24,7 @@ const useIsVisible = () => {
     setNode(node);
   }, []);
 
-  return { ref, skip };
+  return { ref, skip,setSkip };
 };
 
 export default useIsVisible

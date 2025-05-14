@@ -1,5 +1,5 @@
-import React from "react";
-import { Card } from "../ui/card";
+import { Card } from "@/components/ui/card";
+import React from "react"; 
 
 function FigmaRecCard(props) {
   const { instanceType, monthlyCost, annualSavings, savingsInPercentage } = props;

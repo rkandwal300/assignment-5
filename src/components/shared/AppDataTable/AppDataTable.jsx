@@ -1,7 +1,7 @@
 import { getData } from "@/lib/getData";
 import React, { useEffect, useState } from "react";
-import DataTable from "./DataTable/DataTable";
-import { Column } from "./DataTable/column";
+import DataTable from "../DataTable/DataTable";
+import { Column } from "../DataTable/column";
 import useIsVisible from "@/hooks/useIsVisible";
 import { Loader2 } from "lucide-react";
 

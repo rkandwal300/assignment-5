@@ -1,6 +1,6 @@
 import { getData } from "@/lib/getData";
 import React, { useEffect, useRef, useState } from "react";
-import DataCard from "./DataCard";
+import DataCard from "../DataCard";
 import { Loader2 } from "lucide-react";
 import RecommendationCard from "./RecommendationCard";
 import useIsVisible from "@/hooks/useIsVisible";

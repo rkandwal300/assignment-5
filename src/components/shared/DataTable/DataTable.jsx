@@ -30,8 +30,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
 import React, { useRef, useState } from "react";
-
-import FigmaRecCard from "../FigmaRecCard";
 import CardTableRow from "./CardTableRow";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
 import InstanceDetailRow from "./InstanceDetailRow";
@@ -45,7 +43,7 @@ const DataTable = ({
   limit,
   setLimit,
   total,
-  ref,
+  targetRef,
 }) => {
   const table = useReactTable({
     data,
@@ -119,11 +117,13 @@ const DataTable = ({
               </TableCell>
             </TableRow>
           )}
-          <TableRow>
-            <TableCell ref={ref} colSpan={table.getAllColumns().length}>
-              <Loader2 size={30} className="mx-auto animate-spin" />
-            </TableCell>
-          </TableRow>
+          {data.length < total && (
+            <TableRow ref={targetRef}>
+              <TableCell colSpan={table.getAllColumns().length}>
+                <Loader2 size={30} className="mx-auto animate-spin" />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
 

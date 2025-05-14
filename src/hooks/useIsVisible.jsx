@@ -1,19 +1,30 @@
-import {useState, useEffect} from 'react'
-export default function useIsVisible(ref) {
+import { useState, useEffect, useCallback } from "react";
+
+const useIsVisible = () => {
   const [skip, setSkip] = useState(0);
+  const [node, setNode] = useState (null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) =>{ 
-      if(entry.isIntersecting) setSkip(prev=>prev+10)
-      }
-    );
+    if (!node) return;
 
-    if (ref?.current)   observer.observe(ref.current);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setSkip((prev) => prev + 10);
+      }
+    });
+
+    observer.observe(node);
+
     return () => {
       observer.disconnect();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref?.current]);
-  
-  return skip;
-}
+  }, [node]);
+
+  const ref = useCallback((node ) => {
+    setNode(node);
+  }, []);
+
+  return { ref, skip };
+};
+
+export default useIsVisible

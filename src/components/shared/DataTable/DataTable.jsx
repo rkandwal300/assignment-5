@@ -36,7 +36,7 @@ const DataTable = ({
 }) => {
   const { table,length, selected, openDialog, hasData,dialogRef } = useDataTable(data, columns);
   return (
-    <div className="rounded-md border flex flex-col flex-1 bg-muted/60 overflow-auto">
+    <div className="rounded-md  flex flex-col flex-1 overflow-auto">
       <Table className="table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "./context/ThemeContext";
 import { Moon, Sun } from "lucide-react";
 import AppDataTable from "./components/shared/AppDataTable/AppDataTable";
-import { Input } from "./components/ui/input";
 function App() {
   const { theme, toggleTheme } = useTheme();
 
@@ -24,10 +23,7 @@ function App() {
           <span className="sr-only">Toggle Theme</span>
         </Button>
       </header>
-      <div className="flex flex-col justify-between px-4 md:px-6">
-        <Input className={'bg-muted max-w-60 placeholder:font-semibold font-semibold'} placeholder="Search......"  />
 
-      </div>
       <AppDataTable />
 
       {/* <DataCardList /> */}

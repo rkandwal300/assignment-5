@@ -5,8 +5,7 @@ import { Column } from "../DataTable/column";
 import useIsVisible from "@/hooks/useIsVisible";
 import { Loader2 } from "lucide-react";
 import Searchbox from "../Searchbox/Searchbox";
-import CreateNewInstance from "../Form/CreateNewInstance";
-
+ 
 function AppDataTable() {
   const { ref: targetRef, skip } = useIsVisible();
 
@@ -41,29 +40,28 @@ function AppDataTable() {
   useEffect(() => {
     if (query) {
       fetchFilteredData();
+      fetchFilteredData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchFilteredData]);
-
-  if (loading) {
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <Loader2 size={30} className="animate-spin" />
-      </div>
-    );
-  }
-
+ 
   return (
     <>
-     
-      <Searchbox query={query} setQuery={setQuery} setData={setData} />
-      <DataTable
-        data={data}
-        columns={Column}
-        limit={limit}
-        setLimit={setLimit}
-        targetRef={targetRef}
-        total={dataLength}
-      />
+      <Searchbox query={query} setQuery={setQuery} setData={setData} total={dataLength} updateTotal={setDataLength} />
+      {loading ? (
+        <div className="h-screen w-full flex justify-center items-center">
+          <Loader2 size={30} className="animate-spin" />
+        </div>
+      ) : (
+        <DataTable
+          data={data}
+          columns={Column}
+          limit={limit}
+          setLimit={setLimit}
+          targetRef={targetRef}
+          total={dataLength}
+        />
+      )}
     </>
   );
 }

@@ -6,7 +6,12 @@ export const ZONE = {
   US_EAST_5: "us-east-5",
 };
 export const STATUS = {
-  PENDING: "pending",
-  ARRIVED: "arrived",
-  ON_PROGRESS: "on progress",
+  PENDING: "Pending",
+  ARRIVED: "Arrived",
+  ON_PROGRESS: "On Progress",
+};
+export const CLOUD = {
+  AWS: "AWS",
+  AZURE: "Azure",
+  GCP: "GCP",
 };

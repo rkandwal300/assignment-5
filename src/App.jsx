@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "./context/ThemeContext";
 import { Moon, Sun } from "lucide-react";
 import AppDataTable from "./components/shared/AppDataTable/AppDataTable";
-import CreateNewInstance from "./components/shared/Form/CreateNewInstance";
+
 function App() {
   const { theme, toggleTheme } = useTheme();
 

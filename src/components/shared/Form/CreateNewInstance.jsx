@@ -1,7 +1,7 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
-import React from "react";
+import React, { useRef } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,39 +25,33 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { instanceSchema } from "@/lib/schemas/instance.schema";
-import { STATUS, ZONE } from "@/lib/schemas/instance.enum";
+import { CLOUD, STATUS, ZONE } from "@/lib/schemas/instance.enum";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { Check, X } from "lucide-react";
 
-const CreateNewInstance = ({setData}) => {
+const CreateNewInstance = ({ onSubmit }) => {
+  const dialogCloseRef = useRef(null);
   const form = useForm({
     resolver: zodResolver(instanceSchema),
     defaultValues: {
       cspProvider: "AWS",
     },
   });
-  const onSubmit = (values) => {
-    setData((prev) => [
-      {
-        id: prev.length,
-        data: {
-          currentPlatform: values,
-          recommendations: [],
-        },
-      },
-      ...prev,
-    ]);
-    console.log("Submitted:", values);
+
+  const handleSubmit = (values) => {
+    onSubmit(values);
+    dialogCloseRef.current.click();
   };
 
-  console.log({ form: form.watch(), errors: form.formState.errors });
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <header className="px-4 py-2 w-full flex justify-between items-center border-b ">
           <DialogTitle>Create New Instance</DialogTitle>
           <div className=" flex justify-between gap-2 items-center">
             <DialogClose
+              ref={dialogCloseRef}
+              type="button"
               className={buttonVariants({
                 variant: "outline",
                 className: "text-primary",
@@ -71,7 +65,7 @@ const CreateNewInstance = ({setData}) => {
           </div>
         </header>
 
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 px-4 py-2">
           <FormField
             control={form.control}
             name="instanceType"
@@ -240,7 +234,26 @@ const CreateNewInstance = ({setData}) => {
                 <FormItem>
                   <FormLabel>Cloud Provider</FormLabel>
                   <FormControl>
-                    <Input className={"max-w-70"} readOnly {...field} />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className={"w-50"}>
+                          <SelectValue placeholder="Select cloud" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Cloud</SelectLabel>
+                          {Object.values(CLOUD).map((cloud) => (
+                            <SelectItem key={cloud} value={cloud}>
+                              {cloud}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

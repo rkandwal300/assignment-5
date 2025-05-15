@@ -9,6 +9,5 @@ export const instanceSchema = z.object({
   annualCost: z.number().positive(),
   pricingModel: z.string().min(1, { message: "Please enter a valid value" }),
   status: z.string().min(1, { message: "Please enter a valid value" }),
-  cspProvider: z.literal("AWS"),
-  //   cspProvider: z.enum(["AWS", "AZURE", "GCP"]),
+  cspProvider: z.string().min(1), 
 });

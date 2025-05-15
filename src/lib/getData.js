@@ -8,7 +8,9 @@ export const getData = async (limit, skip, query) => {
         val.data.currentPlatform.instanceType.startsWith(query)
       );
     }
-   const userData = filterData.splice(skip, limit);
+    const userData = filterData
+      .splice(skip, limit)
+      .map((val, idx) => ({ ...val, id: String(skip + idx) }));
     return { userData, total: filterData.length };
   } catch (error) {
     console.log("error: unable to fetch data file", error);

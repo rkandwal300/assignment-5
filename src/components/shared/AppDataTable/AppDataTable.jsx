@@ -5,6 +5,7 @@ import { Column } from "../DataTable/column";
 import useIsVisible from "@/hooks/useIsVisible";
 import { Loader2 } from "lucide-react";
 import Searchbox from "../Searchbox/Searchbox";
+import CreateNewInstance from "../Form/CreateNewInstance";
 
 function AppDataTable() {
   const { ref: targetRef, skip } = useIsVisible();
@@ -53,7 +54,8 @@ function AppDataTable() {
 
   return (
     <>
-      <Searchbox query={query} setQuery={setQuery} />
+     
+      <Searchbox query={query} setQuery={setQuery} setData={setData} />
       <DataTable
         data={data}
         columns={Column}

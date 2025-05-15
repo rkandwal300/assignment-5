@@ -15,15 +15,31 @@ import {
   EllipsisVertical,
   MoreHorizontal,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 const DesktopActions = () => (
-  <div
-    className="hidden lg:flex gap-2 items-center"
-    onClick={(e) => e.stopPropagation()}
-  >
-    <Button className="rounded-full w-9 aspect-square">
-      <CalendarDays size={18} />
-    </Button>
+  <div className="hidden lg:flex gap-2 items-center">
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button className="rounded-full w-9 aspect-square">
+          <CalendarDays size={18} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <Calendar
+          mode="single"
+          disabled={(date) =>
+            date < new Date() || date < new Date("1900-01-01")
+          }
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
     <Button className="rounded-full w-9 aspect-square">
       <Copy size={18} />
     </Button>
@@ -45,18 +61,28 @@ const MobileActions = () => (
       <DropdownMenuLabel className="font-semibold">Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem>
+        <Button variant={"ghost"} className={"w-full justify-between"}>
           Copy
-          <DropdownMenuShortcut>
-            <Copy size={18} />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Calendar
-          <DropdownMenuShortcut>
-            <CalendarDays size={18} />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
+          <Copy size={18} />
+        </Button>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant={"ghost"} className={"w-full justify-between"}>
+              Calendar
+              <CalendarDays size={18} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Calendar
+              mode="single"
+              disabled={(date) =>
+                date < new Date() || date < new Date("1900-01-01")
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </DropdownMenuGroup>
     </DropdownMenuContent>
   </DropdownMenu>
@@ -64,7 +90,7 @@ const MobileActions = () => (
 
 // Render actions cell
 const renderActions = () => (
-  <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
     <DesktopActions />
     <MobileActions />
   </div>
@@ -96,7 +122,7 @@ export const Column = [
   },
   {
     accessorKey: "monthlyCost",
-    header: "Monthly Cost",
+    header: <p className="text-end">Monthly Cost</p>,
     cell: ({ row }) => {
       const { monthlyCost } = row.original.data.currentPlatform;
       return <p className="text-end">{`$ ${monthlyCost}`}</p>;
@@ -104,10 +130,10 @@ export const Column = [
   },
   {
     accessorKey: "annualCost",
-    header: "Annual Cost",
+    header: <p className="text-center">Annual Cost</p>,
     cell: ({ row }) => {
       const { annualCost } = row.original.data.currentPlatform;
-      return <p className="text-end">{`$ ${annualCost}`}</p>;
+      return <p className="text-center">{`$ ${annualCost}`}</p>;
     },
   },
   {

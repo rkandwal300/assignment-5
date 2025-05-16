@@ -1,26 +1,22 @@
 import { getData } from "@/lib/getData";
-import React, { useEffect, useRef, useState } from "react";
-import DataCard from "../DataCard";
+import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import RecommendationCard from "./RecommendationCard";
 import useIsVisible from "@/hooks/useIsVisible";
 
 function DataCardList() {
-  const targetRef = useRef();
-  const skip = useIsVisible(targetRef);
+  const { ref: targetRef ,skip } = useIsVisible();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  
-
-  useEffect(() => { 
+  useEffect(() => {
     (async () => {
-      const res = await getData(10, skip);
-      setData((prev) => [...prev, ...res]);
+      const { userData } = await getData(10, skip);
+      setData((prev) => [...prev, ...userData]);
       setLoading(false);
-    })(); 
-}, [skip]);
+    })();
+  }, [skip]);
 
   if (loading)
     return (
@@ -29,8 +25,8 @@ function DataCardList() {
       </div>
     );
   return (
-    <>
-      <section className="p-4 md:p-6 flex flex-wrap xl:grid-cols-4 md:justify-start justify-center 2xl:flex 2xl:flex-wrap gap-4 md:gap-6 overflow-auto">
+    <div className=" flex flex-col overflow-auto">
+      <section className="p-4 md:p-6 flex flex-wrap xl:grid-cols-4 md:justify-start justify-center 2xl:flex 2xl:flex-wrap gap-4 md:gap-6">
         {data.map((val, index) => (
           <RecommendationCard
             key={`${val.data.cspProvider}-${index}`}
@@ -41,7 +37,7 @@ function DataCardList() {
       <p ref={targetRef} className="w-full flex justify-center py-4">
         <Loader2 className="animate-spin text-primary" size={40} />
       </p>
-    </>
+    </div>
   );
 }
 

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { getData } from "@/lib/getData";
 import DataTable from "../DataTable/DataTable";
-import { Column } from "../DataTable/column";
 import useIsVisible from "@/hooks/useIsVisible";
 import { Loader2 } from "lucide-react";
 import Searchbox from "../Searchbox/Searchbox";
+import { Columns } from "../DataTable/column";
  
 function AppDataTable() {
   const { ref: targetRef, skip } = useIsVisible();
@@ -55,7 +55,7 @@ function AppDataTable() {
       ) : (
         <DataTable
           data={data}
-          columns={Column}
+          columns={Columns}
           limit={limit}
           setLimit={setLimit}
           targetRef={targetRef}

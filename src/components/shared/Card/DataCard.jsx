@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
+import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 function DataCard({ currentPlatform }) {
   const temp = {
@@ -13,7 +13,7 @@ function DataCard({ currentPlatform }) {
     savingsInPercentage: "Savings",
     monthlyCost: "Monthly Cost",
     annualCost: "Annual Savings",
-    annualSavings: "Annual Savings", 
+    annualSavings: "Annual Savings",
   };
   return (
     <Card className="p-4 hover:shadow-lg cursor-pointer md:max-w-sm w-xs">
@@ -27,26 +27,35 @@ function DataCard({ currentPlatform }) {
               <div className="flex justify-between font-medium">
                 {temp[key]} <span>:</span>
               </div>
-               
-                <span className="flex justify-end items-center" >
-                  {key == "savingsInPercentage" ? (
-                <Badge
-                   
-                  variant={cn(
-                    currentPlatform[key] > 0 ? "success" : "destructive"
-                  )}
-                >
-                  {currentPlatform[key] + "%"}
-                </Badge>
-              ) :(key == "annualCost" || key == "monthlyCost" || key=="annualSavings" ? "$ " : "") +
-                    currentPlatform[key] +
-                    (key == "savingsInPercentage" ? "%" : "") }
-                </span>
-             
+
+              <span className="flex justify-end items-center">
+                {key == "savingsInPercentage" ? (
+                  <Badge
+                    variant={cn(
+                      currentPlatform[key] > 0 ? "success" : "destructive"
+                    )}
+                  >
+                    {currentPlatform[key] + "%"}
+                  </Badge>
+                ) : (
+                  (key == "annualCost" ||
+                  key == "monthlyCost" ||
+                  key == "annualSavings"
+                    ? "$ "
+                    : "") +
+                  currentPlatform[key] +
+                  (key == "savingsInPercentage" ? "%" : "")
+                )}
+              </span>
             </div>
           )
       )}
-      <CardFooter className={ "flex justify-end px-0 text-xs font-bold text-primary"}> Click here to view Details</CardFooter>
+      <CardFooter
+        className={"flex justify-end px-0 text-xs font-bold text-primary"}
+      >
+        {" "}
+        Click here to view Details
+      </CardFooter>
     </Card>
   );
 }

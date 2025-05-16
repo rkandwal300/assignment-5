@@ -23,7 +23,7 @@ const DetailDialog=({dialogRef,selected})=> {
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="h-fit md:max-w-[900px] lg:max-w-[950px] p-0">
+        <DialogContent className="h-fit md:max-w-[780px] lg:max-w-[900px] p-0">
           {selected && (
             <>
               <DialogHeader className="p-4 py-2 bg-background flex flex-row z-20 justify-between items-center border-b">

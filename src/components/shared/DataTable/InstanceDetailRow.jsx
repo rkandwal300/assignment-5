@@ -4,7 +4,7 @@ const InstanceDetailRow = ({ label, value }) => (
   <Button
     variant="secondary"
     size="lg"
-    className="font-semibold text-lg flex justify-between"
+    className="font-semibold text-sm flex justify-between"
   >
     <span className="text-muted-foreground">{label}: </span>
     <span>{value}</span>

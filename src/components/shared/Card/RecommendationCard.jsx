@@ -6,24 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import DataCard from "./DataCard";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog"; 
+import { Button } from "@/components/ui/button";
 import FigmaCard from "./FigmaCard";
 import FigmaRecCard from "./FigmaRecCard";
 
 export default function RecommendationCard(props) {
   const recommendations = props.recommendations.map(r=> r);
   const [selected, setSelected] = useState(props.currentPlatform);
-  // const temp = {
-  //   zone: "Zone",
-  //   numberOfInstances: "Number of Instances",
-  //   vCPU: "vCPU",
-  //   pricingModel: "Pricing Model",
-  //   monthlyCost: "Monthly Cost",
-  //   annualCost: "Annual Savings",
-     
-  // };
+  
   return (
     <Dialog>
       <DialogTrigger>

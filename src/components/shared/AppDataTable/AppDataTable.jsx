@@ -1,65 +1,89 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer, lazy } from "react";
+
 import { getData } from "@/lib/getData";
-import DataTable from "../DataTable/DataTable";
-import useIsVisible from "@/hooks/useIsVisible";
 import { Loader2 } from "lucide-react";
-import Searchbox from "../Searchbox/Searchbox";
-import { Columns } from "../DataTable/column";
- 
+import useIsVisible from "@/hooks/useIsVisible";
+import { GetColumns } from "../DataTable/column";
+import { ACTIONS, reducer } from "./AppDataTableReducer";
+import DataTable from "../DataTable/DataTable";
+
+const Searchbox = lazy(() => import("../Searchbox/Searchbox"));
+// const DataTable = lazy(() => import("../DataTable/DataTable"));
+//  
+
 function AppDataTable() {
   const { ref: targetRef, skip } = useIsVisible();
 
-  const [data, setData] = useState([]);
-  const [query, setQuery] = useState("");
-  const [dataLength, setDataLength] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [limit, setLimit] = useState(10);
+  const [state, dispatch] = useReducer(reducer, {
+    total: 0,
+    limit: 10,
+    data: [],
+    query: "",
+    loading: true,
+  });
 
   const fetchPaginatedData = useCallback(async () => {
-    const { userData, total } = await getData(limit, skip);
-    setData((prev) => [...prev, ...userData]);
-    setDataLength(total);
-    setLoading(false);
-  }, [limit, skip]);
+    const { userData, total } = await getData(state.limit, skip);
+
+    dispatch({
+      type: ACTIONS.UPDATE_DATA,
+      payload: [...state.data, ...userData],
+    });
+    dispatch({ type: ACTIONS.SET_TOTAL, payload: total });
+    dispatch({ type: ACTIONS.TOGGLE_LOADING, payload: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.limit, skip]);
 
   const fetchFilteredData = useCallback(async () => {
-    const { userData, total } = await getData(skip, 0, query);
-    setData(userData);
-    setDataLength(total);
-    setLoading(false);
-  }, [skip, query]);
+    const { userData, total } = await getData(skip, 0, state.query);
+
+    dispatch({ type: ACTIONS.UPDATE_DATA, payload: userData });
+    dispatch({ type: ACTIONS.SET_TOTAL, payload: total });
+    dispatch({ type: ACTIONS.TOGGLE_LOADING, payload: false });
+  }, [skip, state.query]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (query) return;
+      if (state.query) return;
       fetchPaginatedData();
     }, 2000);
     return () => clearTimeout(timeout);
-  }, [fetchPaginatedData, query]);
+  }, [fetchPaginatedData, state.query]);
 
   useEffect(() => {
-    if (query) {
+    if (state.query) {
       fetchFilteredData();
       fetchFilteredData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchFilteredData]);
- 
+
+  const columns = GetColumns();
   return (
     <>
-      <Searchbox query={query} setQuery={setQuery} setData={setData} total={dataLength} updateTotal={setDataLength} />
-      {loading ? (
+      <Searchbox
+        query={state.query}
+        setQuery={(newQuery) =>
+          dispatch({ type: ACTIONS.UPDATE_QUERY, payload: newQuery })
+        }
+        handleAddData={(values) => {
+          dispatch({ type: ACTIONS.ADD_ROW, payload: values });
+        }}
+      />
+      {state.loading ? (
         <div className="h-screen w-full flex justify-center items-center">
           <Loader2 size={30} className="animate-spin" />
         </div>
       ) : (
         <DataTable
-          data={data}
-          columns={Columns}
-          limit={limit}
-          setLimit={setLimit}
+          data={state.data}
+          columns={columns}
+          limit={state.limit}
+          total={state.total}
           targetRef={targetRef}
-          total={dataLength}
+          setLimit={(newLimit) =>
+            dispatch({ type: ACTIONS.SET_LIMIT, payload: newLimit })
+          }
         />
       )}
     </>

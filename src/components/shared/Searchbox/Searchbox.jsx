@@ -4,20 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CreateNewInstance from "../Form/createNewInstance";
 
-const Searchbox = ({ query, setQuery, setData, total,updateTotal }) => {
-  const handleAddData =(values) => {
-    setData((prev) => [
-      {
-        id: String(total + 1),
-        data: {
-          currentPlatform: values,
-          recommendations: [],
-        },
-      },
-      ...prev,
-    ]);
-    updateTotal(prev=> prev+1)
-  }
+const Searchbox = ({ query, setQuery,handleAddData }) => {
+
   return (
     <div className="flex justify-between px-4 md:px-6 bg-background ">
       <Input

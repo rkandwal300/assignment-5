@@ -1,103 +1,89 @@
+import { useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { flexRender } from "@tanstack/react-table";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+
 import CardTableRow from "./CardTableRow";
-import { getCommonPinningStyles } from "./getCommonPinningStyles";
 import DetailDialog from "./DetailDialog";
 import Pagination from "./Pagination";
 import useDataTable from "./useDataTable";
-import { useDispatch, useSelector } from "react-redux";
+import { GetColumns } from "./column";
+import { getCommonPinningStyles } from "./getCommonPinningStyles";
+
 import {
-  selectAmdData,
-  selectAmdLimit,
-  selectAmdStartingIndex,
+  selectAmdData, selectAmdLimit, selectAmdStartingIndex,
   selectAmdTotal,
 } from "@/redux/features/amdList/amd.selector";
-import { GetColumns } from "./column";
-import { useRef } from "react";
+
 import {
-  fetchAmdDataPagination,
-  TRIGGER_DOWN_INDEX,
-  TRIGGER_UP_INDEX,
-  updateStartingIndex,
+  fetchAmdDataPagination, TRIGGER_DOWN_INDEX,
+  TRIGGER_UP_INDEX, updateStartingIndex,
 } from "@/redux/features/amdList/amd.slice";
 
 const DataTable = () => {
   const scrollContainerRef = useRef(null);
   const dispatch = useDispatch();
+
   const data = useSelector(selectAmdData);
   const total = useSelector(selectAmdTotal);
   const limit = useSelector(selectAmdLimit);
   const startIndex = useSelector(selectAmdStartingIndex);
 
   const columns = GetColumns();
-  const { table, selected, openDialog, hasData, dialogRef } = useDataTable(
-    data,
-    columns
-  );
+  const { table, selected, openDialog, hasData, dialogRef } = useDataTable(data, columns);
 
-  const updateWindow = (newStart, direction) => {
+  const getRowHeight = () => {
+    const container = scrollContainerRef.current;
+    const firstRow = container?.querySelector('[data-slot="table-row"]');
+    return firstRow?.offsetHeight || 0;
+  };
+
+  const updateWindow = useCallback((newStart, direction) => {
     const boundedStart = Math.max(0, Math.min(newStart, total - limit));
     dispatch(updateStartingIndex(boundedStart));
 
-    dispatch(
-      fetchAmdDataPagination({
-        starting: boundedStart,
-        ending: boundedStart + limit,
-      })
-    );
+    dispatch(fetchAmdDataPagination({
+      starting: boundedStart,
+      ending: boundedStart + limit,
+    }));
 
-    const container = scrollContainerRef.current;
-    const firstRow = container?.querySelector('[data-slot="table-row"]');
-    const rowHeight = firstRow?.offsetHeight || 0;
-
-    // Adjust scrollTop after fetching to preserve scroll position
+  
+    const rowHeight = getRowHeight();
     requestAnimationFrame(() => {
+      const container = scrollContainerRef.current;
       if (container && rowHeight > 0) {
-        if (direction === "down") {
-          container.scrollTop -= rowHeight;
-        } else if (direction === "up") {
-          container.scrollTop += rowHeight;
-        }
+        container.scrollTop += direction === "up" ? rowHeight : -rowHeight;
       }
     });
-  };
+  }, [dispatch, limit, total]);
 
   const handleScroll = () => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const firstRow = container.querySelector('[data-slot="table-row"]');
-    const rowHeight = firstRow?.offsetHeight;
-    if (!rowHeight) return;
-
+    const rowHeight = getRowHeight();
     if (!rowHeight) return;
 
     const scrollTop = container.scrollTop;
-    const visibleCardIndex = Math.floor(scrollTop / rowHeight);
+    const visibleIndex = Math.floor(scrollTop / rowHeight);
 
-    if (visibleCardIndex >= TRIGGER_DOWN_INDEX && startIndex + limit < total) {
+    if (visibleIndex >= TRIGGER_DOWN_INDEX && startIndex + limit < total) {
       updateWindow(startIndex + 1, "down");
-    }
-
-    if (visibleCardIndex <= TRIGGER_UP_INDEX && startIndex > 0) {
+    } else if (visibleIndex <= TRIGGER_UP_INDEX && startIndex > 0) {
       updateWindow(startIndex - 1, "up");
     }
   };
 
   return (
-    <div className="rounded-md  flex flex-col flex-1 overflow-auto">
+    <div className="rounded-md flex flex-col flex-1 overflow-auto">
       <Table
         onScroll={handleScroll}
         tableRef={scrollContainerRef}
         className="table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
       >
+        {/* Table Header */}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-muted">
@@ -109,16 +95,14 @@ const DataTable = () => {
                 >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                    : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>
           ))}
         </TableHeader>
 
+         
         <TableBody>
           {hasData ? (
             table.getRowModel().rows.map((row) => (
@@ -132,10 +116,9 @@ const DataTable = () => {
                     key={cell.id}
                     style={{
                       ...getCommonPinningStyles(cell.column),
-                      width:
-                        cell.column.getSize() === Number.MAX_SAFE_INTEGER
-                          ? "auto"
-                          : cell.column.getSize(),
+                      width: cell.column.getSize() === Number.MAX_SAFE_INTEGER
+                        ? "auto"
+                        : cell.column.getSize(),
                     }}
                     className="font-medium text-muted-foreground"
                   >
@@ -153,8 +136,8 @@ const DataTable = () => {
           )}
         </TableBody>
       </Table>
-      <Pagination />
 
+      <Pagination />
       <DetailDialog selected={selected} dialogRef={dialogRef} />
     </div>
   );

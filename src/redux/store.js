@@ -1,19 +1,11 @@
- 
-import { combineReducers } from '@reduxjs/toolkit'
-import counterReducer from './features/counter/counterSlice'
-
-// import { persistMiddleware } from './persistReduxMiddleware';
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import amdListSlice from "./features/amdList/amd.slice";
 
 export const rootReducer = combineReducers({
- 
-    counter: counterReducer
-    
+  amdList: amdListSlice,
 });
 
-// export const store = configureStore({
-//   devTools: true,
-//   reducer: reducers, 
-//   // preloadedState: loadState(),
-//    middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware().concat(persistMiddleware),
-// });
+export const store = configureStore({
+  devTools: true,
+  reducer: rootReducer,
+});

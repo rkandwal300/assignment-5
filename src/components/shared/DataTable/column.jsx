@@ -8,7 +8,7 @@ export function GetColumns() {
         header: "#",
         size: 30,
         maxSize: 30,
-        cell: ({ row }) => `${row.index + 1}.`,
+        cell: ({ row }) => `${row.original.id + 1}.`,
       },
       {
         accessorKey: "zone",

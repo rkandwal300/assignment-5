@@ -4,10 +4,13 @@ import { cn } from "@/lib/utils"
 
 function Table({
   className,
+  onScroll,
+  tableRef,
   ...props
 }) {
   return (
-    <div data-slot="table-container" className=" w-full overflow-x-auto">
+    <div data-slot="table-container" className=" w-full overflow-x-auto" onScroll={onScroll}
+      ref={tableRef}>
       <table
         data-slot="table"
         className={cn("w-full caption-bottom rounded-lg text-sm", className)}

@@ -1,6 +1,4 @@
-import {
-  flexRender, 
-} from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -17,27 +15,83 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Loader2, X } from "lucide-react"; 
+import { Loader2, X } from "lucide-react";
 import CardTableRow from "./CardTableRow";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
 import DetailDialog from "./DetailDialog";
 import Pagination from "./Pagination";
 import useDataTable from "./useDataTable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectAmdData,
+  selectAmdLimit,
+  selectAmdStartingIndex,
+  selectAmdTotal,
+} from "@/redux/features/amdList/amd.selector";
+import { GetColumns } from "./column";
+import { useRef } from "react";
+import {
+  fetchAmdDataPagination,
+  TRIGGER_DOWN_INDEX,
+  TRIGGER_UP_INDEX,
+  updateStartingIndex,
+} from "@/redux/features/amdList/amd.slice";
 
-const DataTable = ({
-  columns,
-  data,
-  prev,
-  next,
-  limit,
-  setLimit,
-  total,
-  targetRef,
-}) => {
-  const { table,length, selected, openDialog, hasData,dialogRef } = useDataTable(data, columns);
+const DataTable = () => {
+  const scrollContainerRef = useRef(null);
+  const dispatch = useDispatch();
+  const data = useSelector(selectAmdData);
+  const total = useSelector(selectAmdTotal);
+  const limit = useSelector(selectAmdLimit);
+  const startIndex = useSelector(selectAmdStartingIndex);
+
+  const columns = GetColumns();
+  const { table, selected, openDialog, hasData, dialogRef } = useDataTable(
+    data,
+    columns
+  );
+
+  const updateWindow = (newStart) => {
+    const boundedStart = Math.max(0, Math.min(newStart, total - limit));
+    dispatch(updateStartingIndex(boundedStart));
+
+    dispatch(
+      fetchAmdDataPagination({
+        starting: boundedStart,
+        ending: boundedStart + limit,
+      })
+    );
+  };
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const firstRow = container.querySelector('[data-slot="table-row"]');
+    const rowHeight = firstRow?.offsetHeight;
+    if (!rowHeight) return;
+
+    if (!rowHeight) return;
+
+    const scrollTop = container.scrollTop;
+    const visibleCardIndex = Math.floor(scrollTop / rowHeight);
+
+    if (visibleCardIndex >= TRIGGER_DOWN_INDEX && startIndex + limit < total) {
+      updateWindow(startIndex + 1);
+    }
+
+    if (visibleCardIndex <= TRIGGER_UP_INDEX && startIndex > 0) {
+      updateWindow(startIndex - 1);
+    }
+  };
+
   return (
     <div className="rounded-md  flex flex-col flex-1 overflow-auto">
-      <Table className="table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6">
+      <Table
+        onScroll={handleScroll}
+        tableRef={scrollContainerRef}
+        className="table-auto border-separate border-spacing-y-2 w-full px-4 md:px-6"
+      >
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-muted">
@@ -91,23 +145,9 @@ const DataTable = ({
               </TableCell>
             </TableRow>
           )}
-          {data.length < total && (
-            <TableRow ref={targetRef}>
-              <TableCell colSpan={table.getAllColumns().length}>
-                <Loader2 size={30} className="mx-auto animate-spin" />
-              </TableCell>
-            </TableRow>
-          )}
         </TableBody>
       </Table>
-      <Pagination
-        limit={limit}
-        setLimit={setLimit}
-        length={length}
-        total={total}
-        prev={prev}
-        next={next}
-      />
+      <Pagination />
 
       <DetailDialog selected={selected} dialogRef={dialogRef} />
     </div>

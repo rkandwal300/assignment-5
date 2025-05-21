@@ -1,17 +1,9 @@
-export const getData = async (limit, skip, query) => {
+export const getData = async () => {
   try {
     const response = await fetch("/data.json");
     const data = await response.json();
-    let filterData = data.Data;
-    if (query) {
-      filterData = filterData.filter((val) =>
-        val.data.currentPlatform.instanceType.startsWith(query)
-      );
-    }
-    const userData = filterData
-      .splice(skip, limit)
-      .map((val, idx) => ({ ...val, id: String(skip + idx) }));
-    return { userData, total: filterData.length };
+
+    return data;
   } catch (error) {
     console.log("error: unable to fetch data file", error);
   }

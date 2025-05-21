@@ -29,7 +29,7 @@ import { CLOUD, STATUS, ZONE } from "@/lib/schemas/instance.enum";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { Check, X } from "lucide-react";
 
-const CreateNewInstance = ({ onSubmit }) => {
+const CreateNewInstance = () => {
   const dialogCloseRef = useRef(null);
   const form = useForm({
     resolver: zodResolver(instanceSchema),
@@ -39,7 +39,8 @@ const CreateNewInstance = ({ onSubmit }) => {
   });
 
   const handleSubmit = (values) => {
-    onSubmit(values);
+    // onSubmit(values);
+    console.log({ values });
     dialogCloseRef.current.click();
   };
 

@@ -17,8 +17,8 @@ function App() {
           </div>
         }
       >
-        {/* <AppDataTable /> */}
-        <SlidingWindow/>
+        <AppDataTable />
+        {/* <SlidingWindow/> */}
       </Suspense>
       {/* <div className="flex gap-2">
         <Button

@@ -2,14 +2,10 @@ import { Suspense } from "react";
 import AppDataTable from "./components/shared/AppDataTable/AppDataTable";
 import DataCardList from "./components/shared/Card/DataCardList";
 import Header from "./components/shared/Header/Header";
-import { Loader2 } from "lucide-react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { decrement, increment } from "./redux/features/counter/counterSlice";
-import { Button } from "./components/ui/button";
+import { Loader2 } from "lucide-react"; 
+import SlidingWindow from "./components/shared/SlidingWindow/SlidingWindow";
 
-function App() {
-  // const count = useSelector((state) => state.counter.value);
-  // const dispatch = useDispatch();
+function App() { 
 
   return (
     <section className="h-screen flex flex-col gap-4 w-full overflow-hidden">
@@ -21,7 +17,8 @@ function App() {
           </div>
         }
       >
-        <AppDataTable />
+        {/* <AppDataTable /> */}
+        <SlidingWindow/>
       </Suspense>
       {/* <div className="flex gap-2">
         <Button

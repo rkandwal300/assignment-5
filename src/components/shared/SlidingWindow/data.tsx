@@ -1,0 +1,1 @@
+export const dataList = Array.from({ length: 100 }).map((_, idx) => `Card-${idx}`)

@@ -7,15 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Loader2, X } from "lucide-react";
 import CardTableRow from "./CardTableRow";
 import { getCommonPinningStyles } from "./getCommonPinningStyles";
 import DetailDialog from "./DetailDialog";
@@ -51,7 +42,7 @@ const DataTable = () => {
     columns
   );
 
-  const updateWindow = (newStart,direction) => {
+  const updateWindow = (newStart, direction) => {
     const boundedStart = Math.max(0, Math.min(newStart, total - limit));
     dispatch(updateStartingIndex(boundedStart));
 
@@ -61,21 +52,21 @@ const DataTable = () => {
         ending: boundedStart + limit,
       })
     );
-    
-  const container = scrollContainerRef.current;
-  const firstRow = container?.querySelector('[data-slot="table-row"]');
-  const rowHeight = firstRow?.offsetHeight || 0;
 
-  // Adjust scrollTop after fetching to preserve scroll position
-  requestAnimationFrame(() => {
-    if (container && rowHeight > 0) {
-      if (direction === "down") {
-        container.scrollTop -= rowHeight;
-      } else if (direction === "up") {
-        container.scrollTop += rowHeight;
+    const container = scrollContainerRef.current;
+    const firstRow = container?.querySelector('[data-slot="table-row"]');
+    const rowHeight = firstRow?.offsetHeight || 0;
+
+    // Adjust scrollTop after fetching to preserve scroll position
+    requestAnimationFrame(() => {
+      if (container && rowHeight > 0) {
+        if (direction === "down") {
+          container.scrollTop -= rowHeight;
+        } else if (direction === "up") {
+          container.scrollTop += rowHeight;
+        }
       }
-    }
-  });
+    });
   };
 
   const handleScroll = () => {
@@ -91,14 +82,13 @@ const DataTable = () => {
     const scrollTop = container.scrollTop;
     const visibleCardIndex = Math.floor(scrollTop / rowHeight);
 
+    if (visibleCardIndex >= TRIGGER_DOWN_INDEX && startIndex + limit < total) {
+      updateWindow(startIndex + 1, "down");
+    }
 
-  if (visibleCardIndex >= TRIGGER_DOWN_INDEX && startIndex + limit < total) {
-    updateWindow(startIndex + 1, "down");
-  }
-
-  if (visibleCardIndex <= TRIGGER_UP_INDEX && startIndex > 0) {
-    updateWindow(startIndex - 1, "up");
-  }
+    if (visibleCardIndex <= TRIGGER_UP_INDEX && startIndex > 0) {
+      updateWindow(startIndex - 1, "up");
+    }
   };
 
   return (

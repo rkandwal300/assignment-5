@@ -4,7 +4,7 @@ import { fetchDataFromDB } from "@/db/fetchDataFromDB";
 import { getData } from "@/lib/getData";
 
 // Constants
-export const CARD_WINDOW = 25;
+export const CARD_WINDOW = 50;
 export const TRIGGER_DOWN_INDEX = 15;
 export const TRIGGER_UP_INDEX = 5;
 

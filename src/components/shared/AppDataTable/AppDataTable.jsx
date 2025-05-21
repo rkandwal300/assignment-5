@@ -8,8 +8,6 @@ import { ACTIONS, reducer } from "./AppDataTableReducer";
 import DataTable from "../DataTable/DataTable";
 
 const Searchbox = lazy(() => import("../Searchbox/Searchbox"));
-// const DataTable = lazy(() => import("../DataTable/DataTable"));
-//  
 
 function AppDataTable() {
   const { ref: targetRef, skip } = useIsVisible();

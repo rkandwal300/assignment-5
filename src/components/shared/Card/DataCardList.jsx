@@ -5,7 +5,7 @@ import RecommendationCard from "./RecommendationCard";
 import useIsVisible from "@/hooks/useIsVisible";
 
 function DataCardList() {
-  const { ref: targetRef ,skip } = useIsVisible();
+  const { ref: targetRef, skip } = useIsVisible();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);

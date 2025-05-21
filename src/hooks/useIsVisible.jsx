@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const useIsVisible = () => {
   const [skip, setSkip] = useState(0);
-  const [node, setNode] = useState (null);
+  const [node, setNode] = useState(null);
 
   useEffect(() => {
     if (!node) return;
@@ -20,11 +20,11 @@ const useIsVisible = () => {
     };
   }, [node]);
 
-  const ref = useCallback((node ) => {
+  const ref = useCallback((node) => {
     setNode(node);
   }, []);
 
-  return { ref, skip,setSkip };
+  return { ref, skip, setSkip };
 };
 
-export default useIsVisible
+export default useIsVisible;
